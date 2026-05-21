@@ -84,4 +84,15 @@ public class ProductController {
                 .build();
     }
 
+    @DeleteMapping(
+            path = "/{id}"
+    )
+    WebResponse<String> delete(@PathVariable String id){
+        productService.delete(id);
+
+        return WebResponse.<String>builder()
+                .message("Product deleted Successfully")
+                .build();
+    }
+
 }

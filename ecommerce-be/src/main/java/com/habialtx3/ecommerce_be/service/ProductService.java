@@ -118,4 +118,12 @@ public class ProductService {
 
         return toProductResponse(product);
     }
+
+    public void delete(String id) {
+        Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
+
+        productRepository.delete(product);
+    }
 }
