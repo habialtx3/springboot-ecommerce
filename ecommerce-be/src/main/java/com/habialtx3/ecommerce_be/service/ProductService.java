@@ -1,0 +1,56 @@
+package com.habialtx3.ecommerce_be.service;
+
+import com.habialtx3.ecommerce_be.entity.Product;
+import com.habialtx3.ecommerce_be.model.product.CreateProductRequest;
+import com.habialtx3.ecommerce_be.model.product.ProductResponse;
+import com.habialtx3.ecommerce_be.model.web.WebResponse;
+import com.habialtx3.ecommerce_be.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Service
+public class ProductService {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private ValidationService validation;
+
+    private ProductResponse toProductResponse(Product response) {
+        return ProductResponse.builder()
+                .id(response.getId())
+                .slug(response.getSlug())
+                .description(response.getDescription())
+                .name(response.getName())
+                .weight(response.getWeight())
+                .price(response.getPrice())
+                .createdAt(response.getCreatedAt())
+                .build();
+    }
+
+    @Transactional
+    public ProductResponse create (CreateProductRequest request) {
+
+        validation.validate(request);
+
+        Product product = new Product();
+        product.setName(request.getName());
+        String generatedSlug = request.getName().trim().toLowerCase().replaceAll("\\s+", "-");
+        product.setSlug(generatedSlug);
+        product.setDescription(request.getDescription());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setWeight(request.getWeight());
+        product.setStatus(request.getStatus());
+        product.setCreatedAt(LocalDateTime.now());
+
+        productRepository.save(product);
+
+        return toProductResponse(product);
+    }
+}
