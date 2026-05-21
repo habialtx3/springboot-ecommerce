@@ -2,6 +2,7 @@ package com.habialtx3.ecommerce_be.controller;
 
 import com.habialtx3.ecommerce_be.model.product.CreateProductRequest;
 import com.habialtx3.ecommerce_be.model.product.ProductResponse;
+import com.habialtx3.ecommerce_be.model.product.UpdateProductRequest;
 import com.habialtx3.ecommerce_be.model.web.WebResponse;
 import com.habialtx3.ecommerce_be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,20 @@ public class ProductController {
         return WebResponse.<ProductResponse>builder()
                 .data(response)
                 .message("Product " + id + " has been found")
+                .build();
+    }
+
+    @PatchMapping(
+            path = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<ProductResponse> update(@PathVariable String id, @RequestBody UpdateProductRequest request) {
+        ProductResponse response = productService.update(id, request);
+
+        return WebResponse.<ProductResponse>builder()
+                .data(response)
+                .message("Product Updated successfully")
                 .build();
     }
 

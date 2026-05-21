@@ -3,6 +3,7 @@ package com.habialtx3.ecommerce_be.service;
 import com.habialtx3.ecommerce_be.entity.Product;
 import com.habialtx3.ecommerce_be.model.product.CreateProductRequest;
 import com.habialtx3.ecommerce_be.model.product.ProductResponse;
+import com.habialtx3.ecommerce_be.model.product.UpdateProductRequest;
 import com.habialtx3.ecommerce_be.model.web.WebResponse;
 import com.habialtx3.ecommerce_be.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -81,6 +83,38 @@ public class ProductService {
         Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
         );
+
+        return toProductResponse(product);
+    }
+
+    @Transactional
+    public ProductResponse update(String id, UpdateProductRequest request) {
+
+        validation.validate(request);
+
+        Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
+
+        if (Objects.nonNull(request.getName())) {
+            product.setName(request.getName());
+            String generatedSlug = request.getName().trim().toLowerCase().replaceAll("\\s+", "-");
+            product.setSlug(generatedSlug);
+        }
+
+        if (Objects.nonNull(request.getDescription())) {
+            product.setDescription(request.getDescription());
+        }
+
+        if (Objects.nonNull(request.getPrice())) {
+            product.setPrice(request.getPrice());
+        }
+
+        if (Objects.nonNull(request.getWeight())) {
+            product.setWeight(request.getWeight());
+        }
+
+        productRepository.save(product);
 
         return toProductResponse(product);
     }
