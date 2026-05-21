@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -38,6 +39,33 @@ public class ProductController {
 
         return WebResponse.<List<ProductResponse>>builder()
                 .data(responses)
+                .build();
+    }
+
+
+    @GetMapping(
+            path = "/{slug}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<ProductResponse> get(@PathVariable String slug) {
+        ProductResponse response = productService.getBySlug(slug);
+
+        return WebResponse.<ProductResponse>builder()
+                .data(response)
+                .message("Product " + slug + " has been found")
+                .build();
+    }
+
+    @GetMapping(
+            path = "/id/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<ProductResponse> getById(@PathVariable String id) {
+        ProductResponse response = productService.getById(id);
+
+        return WebResponse.<ProductResponse>builder()
+                .data(response)
+                .message("Product " + id + " has been found")
                 .build();
     }
 

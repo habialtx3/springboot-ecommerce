@@ -6,8 +6,10 @@ import com.habialtx3.ecommerce_be.model.product.ProductResponse;
 import com.habialtx3.ecommerce_be.model.web.WebResponse;
 import com.habialtx3.ecommerce_be.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +37,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse create (CreateProductRequest request) {
+    public ProductResponse create(CreateProductRequest request) {
 
         validation.validate(request);
 
@@ -63,5 +65,23 @@ public class ProductService {
         return products.stream().map(
                 product -> toProductResponse(product)
         ).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getBySlug(String slug) {
+        Product product = productRepository.findBySlug(slug).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
+
+        return toProductResponse(product);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getById(String id) {
+        Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
+
+        return toProductResponse(product);
     }
 }

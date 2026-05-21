@@ -3,5 +3,11 @@ package com.habialtx3.ecommerce_be.repository;
 import com.habialtx3.ecommerce_be.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product, String> {
+import java.util.Optional;
+import java.util.UUID;
+
+public interface ProductRepository extends JpaRepository<Product, UUID> {
+    Optional<Product> findBySlug(String slug);
+
+
 }
