@@ -1,5 +1,7 @@
 package com.habialtx3.ecommerce_be.controller;
 
+import com.habialtx3.ecommerce_be.annotations.RequireRole;
+import com.habialtx3.ecommerce_be.entity.User;
 import com.habialtx3.ecommerce_be.model.product.CreateProductRequest;
 import com.habialtx3.ecommerce_be.model.product.ProductResponse;
 import com.habialtx3.ecommerce_be.model.product.UpdateProductRequest;
@@ -23,7 +25,7 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<ProductResponse> create(@RequestBody CreateProductRequest request) {
+    public WebResponse<ProductResponse> create(User user, @RequestBody CreateProductRequest request) {
         ProductResponse response = productService.create(request);
 
         return WebResponse.<ProductResponse>builder()
@@ -61,7 +63,8 @@ public class ProductController {
             path = "/id/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<ProductResponse> getById(@PathVariable String id) {
+    @RequireRole("ADMIN")
+    public WebResponse<ProductResponse> getById(@PathVariable String id, User user) {
         ProductResponse response = productService.getById(id);
 
         return WebResponse.<ProductResponse>builder()
