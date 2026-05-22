@@ -30,5 +30,8 @@ public class CreateProductRequest {
     @Min(value = 1, message = "Berat minimal adalah 1 gram")
     private Integer weight;
 
+    @NotNull(message = "Category tidak boleh kosong")
+    private String category;
+
     private String status;
 }

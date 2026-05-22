@@ -1,10 +1,13 @@
 package com.habialtx3.ecommerce_be.service;
 
+import com.habialtx3.ecommerce_be.entity.Category;
 import com.habialtx3.ecommerce_be.entity.Product;
+import com.habialtx3.ecommerce_be.model.category.CategoryProductResponse;
 import com.habialtx3.ecommerce_be.model.product.CreateProductRequest;
 import com.habialtx3.ecommerce_be.model.product.ProductResponse;
 import com.habialtx3.ecommerce_be.model.product.UpdateProductRequest;
 import com.habialtx3.ecommerce_be.model.web.WebResponse;
+import com.habialtx3.ecommerce_be.repository.CategoryRepostiory;
 import com.habialtx3.ecommerce_be.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +27,33 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
+    private CategoryRepostiory categoryRepostiory;
+
+    @Autowired
     private ValidationService validation;
 
-    private ProductResponse toProductResponse(Product response) {
+    private ProductResponse toProductResponse(Product product) {
+        CategoryProductResponse categoryDto = null;
+        if (product.getCategory() != null) {
+            categoryDto = CategoryProductResponse.builder()
+                    .id(product.getCategory().getId())
+                    .name(product.getCategory().getName())
+                    .slug(product.getCategory().getSlug())
+                    .description(product.getCategory().getDescription())
+                    .build();
+        }
+
+        // 2. Petakan ke ProductResponse
         return ProductResponse.builder()
-                .id(response.getId())
-                .slug(response.getSlug())
-                .description(response.getDescription())
-                .name(response.getName())
-                .weight(response.getWeight())
-                .price(response.getPrice())
-                .status(response.getStatus())
-                .createdAt(response.getCreatedAt())
+                .id(product.getId())
+                .slug(product.getSlug())
+                .description(product.getDescription())
+                .name(product.getName())
+                .weight(product.getWeight())
+                .price(product.getPrice())
+                .category(categoryDto) // <-- Sekarang aman, memakai DTO yang pipih!
+                .status(product.getStatus())
+                .createdAt(product.getCreatedAt())
                 .build();
     }
 
@@ -43,6 +61,10 @@ public class ProductService {
     public ProductResponse create(CreateProductRequest request) {
 
         validation.validate(request);
+
+        Category category =  categoryRepostiory.findById(UUID.fromString(request.getCategory())).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
 
         Product product = new Product();
         product.setName(request.getName());
@@ -52,6 +74,7 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setWeight(request.getWeight());
+        product.setCategory(category);
         product.setStatus("PENDING");
         product.setCreatedAt(LocalDateTime.now());
 

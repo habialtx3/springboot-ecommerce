@@ -1,7 +1,6 @@
 package com.habialtx3.ecommerce_be.service;
 
 import com.habialtx3.ecommerce_be.entity.Category;
-import com.habialtx3.ecommerce_be.entity.Product;
 import com.habialtx3.ecommerce_be.model.category.CategoryResponse;
 import com.habialtx3.ecommerce_be.model.category.CreateCategoryRequest;
 import com.habialtx3.ecommerce_be.model.category.UpdateCategoryRequest;
@@ -30,7 +29,7 @@ public class CategoryService {
                 .name(category.getName())
                 .slug(category.getSlug())
                 .description(category.getDescription())
-                .products(category.getProducts())
+                .s
                 .build();
     }
 

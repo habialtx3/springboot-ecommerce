@@ -1,5 +1,7 @@
 package com.habialtx3.ecommerce_be.model.product;
 
+import com.habialtx3.ecommerce_be.model.category.CategoryProductResponse;
+import com.habialtx3.ecommerce_be.model.category.CategoryResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +24,6 @@ public class ProductResponse {
 
     private UUID id;
 
-//    private Category category;
-
     private String name;
 
     private String slug;
@@ -35,6 +35,8 @@ public class ProductResponse {
     private Integer weight; // Dalam gram
 
     private String status; // Menggunakan String (DRAFT, ACTIVE, ARCHIVED) atau Enum
+
+    private CategoryProductResponse category;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }

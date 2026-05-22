@@ -1,5 +1,6 @@
 package com.habialtx3.ecommerce_be.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "category_id",
-            nullable = false,
+            nullable = true,
             foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY"))
     private Category category;
 

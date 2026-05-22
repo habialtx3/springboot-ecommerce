@@ -25,7 +25,7 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<ProductResponse> create(User user, @RequestBody CreateProductRequest request) {
+    public WebResponse<ProductResponse> create(@RequestBody CreateProductRequest request) {
         ProductResponse response = productService.create(request);
 
         return WebResponse.<ProductResponse>builder()
