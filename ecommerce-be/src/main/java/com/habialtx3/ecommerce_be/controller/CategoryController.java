@@ -54,4 +54,18 @@ public class CategoryController {
                 .build();
     }
 
+    @DeleteMapping(
+            path = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    WebResponse<CategoryResponse> delete(@PathVariable String id) {
+        categoryService.delete(id);
+
+        return WebResponse.<CategoryResponse>builder()
+                .data(null)
+                .message("Category deleted successfully")
+                .build();
+    }
+
 }

@@ -77,4 +77,12 @@ public class CategoryService {
 
         return toCategoryResponse(category);
     }
+
+    public void delete(String id) {
+        Category category =  categoryRepostiory.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        );
+
+        categoryRepostiory.delete(category);
+    }
 }
