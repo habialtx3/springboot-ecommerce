@@ -1,5 +1,6 @@
 package com.habialtx3.ecommerce_be.resolver;
 
+import com.habialtx3.ecommerce_be.annotations.RequireRole;
 import com.habialtx3.ecommerce_be.entity.User;
 import com.habialtx3.ecommerce_be.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,23 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
         if(user.getTokenExpiredAt() < System.currentTimeMillis()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+
+        RequireRole requireRole = parameter.getMethodAnnotation(RequireRole.class);
+        if(requireRole != null ){
+            String[] allowedRoles = requireRole.value();
+            boolean hasAccess = false;
+
+            for(String role : allowedRoles) {
+                if(role.equalsIgnoreCase(user.getRole())){
+                    hasAccess = true;
+                    break;
+                }
+            }
+
+            if(!hasAccess) {
+                throw  new ResponseStatusException(HttpStatus.FORBIDDEN,"Not your authority");
+            }
         }
 
         return user;
