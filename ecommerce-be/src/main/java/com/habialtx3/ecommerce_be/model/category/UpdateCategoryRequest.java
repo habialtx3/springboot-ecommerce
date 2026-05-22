@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCategoryRequest {
+public class UpdateCategoryRequest {
 
-    @NotBlank
     private String name;
 
-    @NotBlank
     private String description;
 
 }
+
