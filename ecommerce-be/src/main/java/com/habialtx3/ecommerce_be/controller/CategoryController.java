@@ -6,10 +6,9 @@ import com.habialtx3.ecommerce_be.model.web.WebResponse;
 import com.habialtx3.ecommerce_be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -26,6 +25,14 @@ public class CategoryController {
         CategoryResponse response = categoryService.create(request);
 
         return WebResponse.<CategoryResponse>builder()
+                .data(response)
+                .build();
+    }
+
+    @GetMapping
+    WebResponse<List<CategoryResponse>> list() {
+        List<CategoryResponse> response = categoryService.list();
+        return WebResponse.<List<CategoryResponse>>builder()
                 .data(response)
                 .build();
     }

@@ -7,6 +7,8 @@ import com.habialtx3.ecommerce_be.repository.CategoryRepostiory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService {
 
@@ -38,5 +40,13 @@ public class CategoryService {
         categoryRepostiory.save(category);
 
         return toCategoryResponse(category);
+    }
+
+    public List<CategoryResponse> list() {
+        List<Category> categories = categoryRepostiory.findAll();
+
+        return categories.stream().map(
+                category -> toCategoryResponse(category)
+        ).toList();
     }
 }
