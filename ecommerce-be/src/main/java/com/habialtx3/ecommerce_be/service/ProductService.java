@@ -130,6 +130,13 @@ public class ProductService {
             product.setDescription(request.getDescription());
         }
 
+        if (Objects.nonNull(request.getCategory())) {
+            Category category =  categoryRepostiory.findById(UUID.fromString(request.getCategory())).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+            );
+            product.setCategory(category);
+        }
+
         if (Objects.nonNull(request.getPrice())) {
             product.setPrice(request.getPrice());
         }

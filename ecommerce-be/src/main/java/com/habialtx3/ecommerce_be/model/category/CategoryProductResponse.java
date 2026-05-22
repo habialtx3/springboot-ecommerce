@@ -21,5 +21,6 @@ public class CategoryProductResponse {
     private String slug;
 
     private String description;
-
+    
+    private List<Product> products;
 }

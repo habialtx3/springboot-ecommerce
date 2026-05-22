@@ -1,6 +1,8 @@
 package com.habialtx3.ecommerce_be.service;
 
 import com.habialtx3.ecommerce_be.entity.Category;
+import com.habialtx3.ecommerce_be.entity.Product;
+import com.habialtx3.ecommerce_be.model.category.CategoryProductResponse;
 import com.habialtx3.ecommerce_be.model.category.CategoryResponse;
 import com.habialtx3.ecommerce_be.model.category.CreateCategoryRequest;
 import com.habialtx3.ecommerce_be.model.category.UpdateCategoryRequest;
@@ -8,6 +10,7 @@ import com.habialtx3.ecommerce_be.repository.CategoryRepostiory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,10 +32,10 @@ public class CategoryService {
                 .name(category.getName())
                 .slug(category.getSlug())
                 .description(category.getDescription())
-                .s
                 .build();
     }
 
+    @Transactional
     public CategoryResponse create(CreateCategoryRequest request) {
         validation.validate(request);
 
@@ -58,8 +61,8 @@ public class CategoryService {
     public CategoryResponse update(String id, UpdateCategoryRequest request) {
         validation.validate(request);
 
-        Category category =  categoryRepostiory.findById(UUID.fromString(id)).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        Category category = categoryRepostiory.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found")
         );
 
         if (Objects.nonNull(request.getName())) {
@@ -77,11 +80,19 @@ public class CategoryService {
         return toCategoryResponse(category);
     }
 
+    @Transactional
     public void delete(String id) {
-        Category category =  categoryRepostiory.findById(UUID.fromString(id)).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Product Not Found")
+        Category category = categoryRepostiory.findById(UUID.fromString(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found")
         );
 
-        categoryRepostiory.delete(category);
+        if (category.getProducts() != null && !category.getProducts().isEmpty()) {
+            for (Product product : category.getProducts()){
+                product.setCategory(null);
+            }
+        }
+
+            categoryRepostiory.delete(category);
     }
+
 }
