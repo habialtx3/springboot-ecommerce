@@ -1,5 +1,6 @@
 package com.habialtx3.ecommerce_be.controller;
 
+import com.habialtx3.ecommerce_be.entity.User;
 import com.habialtx3.ecommerce_be.model.auth.LoginRequest;
 import com.habialtx3.ecommerce_be.model.auth.RegisterRequest;
 import com.habialtx3.ecommerce_be.model.auth.TokenResponse;
@@ -25,6 +26,15 @@ public class AuthController {
 
         return WebResponse.<TokenResponse>builder()
                 .data(response)
+                .build();
+    }
+
+    @DeleteMapping(path = "/logout",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    WebResponse<String> logout(User user) {
+        authService.logout(user);
+        return WebResponse.<String>builder()
+                .message("Log Out Success")
                 .build();
     }
 }

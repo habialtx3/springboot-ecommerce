@@ -34,6 +34,7 @@ public class ProductService {
                 .name(response.getName())
                 .weight(response.getWeight())
                 .price(response.getPrice())
+                .status(response.getStatus())
                 .createdAt(response.getCreatedAt())
                 .build();
     }
@@ -51,7 +52,7 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setWeight(request.getWeight());
-        product.setStatus(request.getStatus());
+        product.setStatus("PENDING");
         product.setCreatedAt(LocalDateTime.now());
 
         productRepository.save(product);
